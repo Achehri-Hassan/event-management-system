@@ -1,59 +1,589 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Event Management System
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A simple **Event Management System** built with **Laravel 12**, **PHP**,
+**MySQL**, **Blade**, and **Eloquent ORM**.
 
-## About Laravel
+This project was originally developed with procedural PHP and was then
+migrated to Laravel following the MVC architecture.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Project Overview
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+The application allows users to manage events and their categories.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Main event information includes:
 
-## Learning Laravel
+-   Event title
+-   Content / description
+-   Image URL
+-   Event date
+-   Publication date
+-   Location
+-   Price
+-   Status (`publish` / `draft`)
+-   Organizer
+-   Category
+-   Event time
+-   Number of available places
+-   End date
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+## Technologies
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+-   PHP 8.2+
+-   Laravel 12
+-   MySQL
+-   Blade
+-   Eloquent ORM
+-   HTML5
+-   CSS3
+-   Composer
+-   XAMPP / MySQL
+-   VS Code
 
-## Laravel Sponsors
+## Database
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+The project uses a MySQL database named:
 
-### Premium Partners
+``` text
+evenets
+```
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+The main Laravel tables are:
 
-## Contributing
+``` text
+categories
+evenements
+organisateurs
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Laravel also creates its framework tables, such as:
 
-## Code of Conduct
+``` text
+migrations
+sessions
+cache
+cache_locks
+jobs
+failed_jobs
+job_batches
+users
+password_reset_tokens
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### Main relationships
 
-## Security Vulnerabilities
+An event belongs to one category:
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+``` text
+Evenement → Category
+```
+
+An event belongs to one organizer:
+
+``` text
+Evenement → Organisateur
+```
+
+A category can contain many events:
+
+``` text
+Category → Evenements
+```
+
+An organizer can have many events:
+
+``` text
+Organisateur → Evenements
+```
+
+## Project Structure
+
+The important Laravel structure is:
+
+``` text
+event-management/
+│
+├── app/
+│   ├── Http/
+│   │   └── Controllers/
+│   │       └── EvenementController.php
+│   │
+│   └── Models/
+│       ├── Category.php
+│       ├── Evenement.php
+│       └── Organisateur.php
+│
+├── database/
+│   ├── migrations/
+│   └── seeders/
+│
+├── public/
+│   └── css/
+│       └── style.css
+│
+├── resources/
+│   └── views/
+│       └── evenements/
+│           ├── index.blade.php
+│           └── create.blade.php
+│
+├── routes/
+│   └── web.php
+│
+├── .env
+├── artisan
+├── composer.json
+└── README.md
+```
+
+## Installation
+
+### 1. Clone the project
+
+``` bash
+git clone <repository-url>
+cd event-management
+```
+
+### 2. Install PHP dependencies
+
+``` bash
+composer install
+```
+
+### 3. Create the environment file
+
+``` bash
+copy .env.example .env
+```
+
+On systems where `copy` is not available:
+
+``` bash
+cp .env.example .env
+```
+
+### 4. Generate the Laravel application key
+
+``` bash
+php artisan key:generate
+```
+
+## Database Configuration
+
+Open `.env` and configure MySQL:
+
+``` env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=evenets
+DB_USERNAME=root
+DB_PASSWORD=
+```
+
+If your MySQL installation uses a password, put it in `DB_PASSWORD`.
+
+For the current development setup, sessions can be stored as files:
+
+``` env
+SESSION_DRIVER=file
+```
+
+After changing `.env`, clear the Laravel configuration cache:
+
+``` bash
+php artisan optimize:clear
+```
+
+## Migrations
+
+Run the migrations:
+
+``` bash
+php artisan migrate
+```
+
+If you are working on a fresh development database and do not need
+existing data:
+
+``` bash
+php artisan migrate:fresh
+```
+
+> `migrate:fresh` deletes the tables managed by the Laravel migrations
+> before recreating them. Do not use it on a database containing data
+> you want to keep.
+
+## Seeders
+
+If seeders are configured, run:
+
+``` bash
+php artisan db:seed
+```
+
+You can also run a specific seeder:
+
+``` bash
+php artisan db:seed --class=CategorySeeder
+```
+
+## Running the Project
+
+Start the Laravel development server:
+
+``` bash
+php artisan serve
+```
+
+Then open:
+
+``` text
+http://127.0.0.1:8000
+```
+
+## Routes
+
+The current event workflow contains these routes:
+
+  Method   URL                    Action
+  -------- ---------------------- -----------------------------
+  GET      `/`                    Display events
+  GET      `/evenements/create`   Display event creation form
+  POST     `/evenements`          Store a new event
+
+The routes are defined in:
+
+``` text
+routes/web.php
+```
+
+## Controller
+
+The main controller is:
+
+``` text
+app/Http/Controllers/EvenementController.php
+```
+
+It currently handles:
+
+-   Displaying the event list
+-   Displaying the create form
+-   Validating submitted event data
+-   Creating a new event
+-   Redirecting back to the event list
+
+The controller uses Eloquent:
+
+``` php
+$evenements = Evenement::with('category')->get();
+```
+
+## Models
+
+### Evenement
+
+``` text
+app/Models/Evenement.php
+```
+
+The model represents the `evenements` table.
+
+It contains relationships with:
+
+-   `Category`
+-   `Organisateur`
+
+### Category
+
+``` text
+app/Models/Category.php
+```
+
+The model represents the `categories` table.
+
+A category can have many events.
+
+### Organisateur
+
+``` text
+app/Models/Organisateur.php
+```
+
+The model represents the `organisateurs` table.
+
+An organizer can have many events.
+
+## Blade Views
+
+The event views are located in:
+
+``` text
+resources/views/evenements/
+```
+
+### Event list
+
+``` text
+index.blade.php
+```
+
+Displays:
+
+-   Event image
+-   Title
+-   Content
+-   Date
+-   Location
+-   Price
+-   Time
+-   Number of places
+-   End date
+-   Category
+
+### Create event
+
+``` text
+create.blade.php
+```
+
+Contains a form for:
+
+-   Title
+-   Content
+-   Image
+-   Event date
+-   Location
+-   Price
+-   Event time
+-   Number of places
+-   End date
+-   Status
+-   Category
+
+Laravel CSRF protection is used with:
+
+``` blade
+@csrf
+```
+
+## Validation
+
+The event creation request validates fields such as:
+
+``` text
+titre
+content
+date_evenement
+lieu
+prix
+status
+id_category
+heure_evenement
+nombre_places
+date_fin
+```
+
+Examples:
+
+``` php
+'titre' => 'required|string|max:150',
+'prix' => 'required|numeric|min:0',
+'status' => 'required|in:publish,draft',
+'id_category' => 'required|exists:categories,id_category',
+'nombre_places' => 'required|integer|min:1',
+```
+
+## Development History
+
+The project started as a procedural PHP application with files such as:
+
+``` text
+index.php
+ajout.php
+db.php
+script.sql
+style.css
+```
+
+The original PHP application used PDO to:
+
+-   Connect to MySQL
+-   Read categories
+-   Display events
+-   Insert new events
+
+The project was then converted to Laravel.
+
+The main conversion was:
+
+``` text
+Procedural PHP
+      ↓
+Laravel MVC
+```
+
+### Before
+
+``` text
+index.php
+    ↓
+SQL query
+    ↓
+HTML
+```
+
+### After
+
+``` text
+Route
+  ↓
+Controller
+  ↓
+Eloquent Model
+  ↓
+MySQL
+  ↓
+Blade View
+```
+
+## Important Laravel Concepts Used
+
+This project demonstrates:
+
+-   Laravel MVC
+-   Routing
+-   Controllers
+-   Eloquent Models
+-   Eloquent relationships
+-   Migrations
+-   Seeders
+-   Blade templates
+-   Form handling
+-   CSRF protection
+-   Validation
+-   `.env` configuration
+-   MySQL database connection
+
+## Troubleshooting
+
+### SQLite instead of MySQL
+
+If Laravel displays:
+
+``` text
+Connection: sqlite
+```
+
+check `.env`:
+
+``` env
+DB_CONNECTION=mysql
+```
+
+Then run:
+
+``` bash
+php artisan optimize:clear
+```
+
+### `sessions` table does not exist
+
+If the error mentions:
+
+``` text
+Table 'evenets.sessions' doesn't exist
+```
+
+you can use file-based sessions for this project:
+
+``` env
+SESSION_DRIVER=file
+```
+
+Then:
+
+``` bash
+php artisan optimize:clear
+```
+
+Alternatively, create and migrate the sessions table if you want
+database sessions.
+
+### `evenement` table does not exist
+
+The Laravel project currently uses the plural table name:
+
+``` text
+evenements
+```
+
+Make sure `Evenement.php` points to:
+
+``` php
+protected $table = 'evenements';
+```
+
+Likewise:
+
+``` php
+// Category.php
+protected $table = 'categories';
+
+// Organisateur.php
+protected $table = 'organisateurs';
+```
+
+### Blade view not found
+
+If Laravel says:
+
+``` text
+View [evenements.index] not found.
+```
+
+the controller:
+
+``` php
+return view('evenements.index');
+```
+
+expects this exact file:
+
+``` text
+resources/views/evenements/index.blade.php
+```
+
+The `evenements` directory is a folder, while `index.blade.php` is the
+file inside it.
+
+## Future Improvements
+
+Possible next features:
+
+-   Edit events
+-   Delete events
+-   Event details page
+-   Organizer authentication
+-   Login / logout
+-   Authorization for admin and users
+-   Use the authenticated organizer instead of a fixed organizer ID
+-   Image upload instead of image URLs
+-   Search events
+-   Filter by category
+-   Pagination
+-   Better form error messages
+-   Dashboard for administrators
+-   REST API
+-   API authentication
+-   Responsive UI
+
+## Author
+
+Developed as a Laravel learning project based on an original PHP Event
+Management System.
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+This project is for learning and portfolio purposes.
